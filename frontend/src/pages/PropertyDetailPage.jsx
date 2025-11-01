@@ -138,8 +138,17 @@ export default function PropertyDetailPage() {
     return (
       <div className="flex items-center justify-center min-h-screen pt-16">
         <div className="text-center">
-          <h2 className="mb-2 text-2xl font-bold text-gray-900">Property Not Found</h2>
-          <p className="text-gray-600">The property you’re looking for doesn’t exist.</p>
+          <h2 className="mb-2 text-2xl font-bold text-gray-900">
+            {err === 'not-found' ? 'Property Not Found' : 'Error Loading Property'}
+          </h2>
+          <p className="text-gray-600">
+            {err === 'not-found'
+              ? "The property you're looking for doesn't exist."
+              : err || 'Failed to load property. Please check if the backend server is running.'}
+          </p>
+          <Button onClick={() => window.location.href = '/properties'} className="mt-4">
+            View All Properties
+          </Button>
         </div>
       </div>
     );
