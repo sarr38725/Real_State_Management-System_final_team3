@@ -234,7 +234,7 @@ const AdminSales = () => {
                           <div className="flex-shrink-0 w-10 h-10">
                             {property.images && property.images.length > 0 ? (
                               <img
-                                src={property.images[0]}
+                                src={property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5000${property.images[0]}`}
                                 alt={property.title}
                                 className="object-cover w-10 h-10 rounded-lg"
                               />

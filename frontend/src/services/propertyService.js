@@ -18,7 +18,11 @@ export const propertyService = {
   },
 
   async createProperty(propertyData) {
-    const response = await api.post('/properties', propertyData);
+    const response = await api.post('/properties', propertyData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    });
     return response.data;
   },
 

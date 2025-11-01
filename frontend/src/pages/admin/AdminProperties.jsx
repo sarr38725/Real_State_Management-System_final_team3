@@ -155,7 +155,7 @@ const AdminProperties = () => {
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       <img
-                        src={property.images?.[0] || 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'}
+                        src={property.images?.[0] ? (property.images[0].startsWith('http') ? property.images[0] : `http://localhost:5000${property.images[0]}`) : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'}
                         alt={property.title}
                         className="object-cover w-12 h-12 rounded-lg"
                       />

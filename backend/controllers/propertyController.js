@@ -81,7 +81,7 @@ const createProperty = async (req, res) => {
     const {
       title, description, property_type, listing_type, price, address,
       city, state, zip_code, country, bedrooms, bathrooms, area_sqft,
-      year_built, featured, images
+      year_built, featured
     } = req.body;
 
     const [result] = await db.query(
@@ -95,11 +95,12 @@ const createProperty = async (req, res) => {
 
     const propertyId = result.insertId;
 
-    if (images && images.length > 0) {
-      for (let i = 0; i < images.length; i++) {
+    if (req.files && req.files.length > 0) {
+      for (let i = 0; i < req.files.length; i++) {
+        const imageUrl = `/uploads/${req.files[i].filename}`;
         await db.query(
           'INSERT INTO property_images (property_id, image_url, is_primary) VALUES (?, ?, ?)',
-          [propertyId, images[i], i === 0]
+          [propertyId, imageUrl, i === 0]
         );
       }
     }

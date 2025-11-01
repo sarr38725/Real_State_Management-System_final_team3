@@ -22,10 +22,16 @@ function normalizeDate(v) {
 function asImageArray(images) {
   if (!images) return [FALLBACK_IMG];
   if (Array.isArray(images)) {
-    const arr = images.filter(Boolean);
+    const arr = images.filter(Boolean).map(img => {
+      if (!img) return FALLBACK_IMG;
+      if (img.startsWith('http')) return img;
+      return `http://localhost:5000${img}`;
+    });
     return arr.length ? arr : [FALLBACK_IMG];
   }
-  return [images || FALLBACK_IMG];
+  const img = images || FALLBACK_IMG;
+  if (img.startsWith('http')) return [img];
+  return [`http://localhost:5000${img}`];
 }
 
 function formatPrice(n) {

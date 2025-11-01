@@ -54,7 +54,7 @@ export const PropertyProvider = ({ children }) => {
         yearBuilt: p.year_built,
         status: p.status,
         featured: p.featured,
-        images: p.images || [],
+        images: p.primary_image ? [p.primary_image] : (p.images || []),
         agent: {
           name: p.agent_name,
           email: p.agent_email,
@@ -96,7 +96,7 @@ export const PropertyProvider = ({ children }) => {
         yearBuilt: p.year_built,
         status: p.status,
         featured: p.featured,
-        images: p.images || [],
+        images: p.primary_image ? [p.primary_image] : (p.images || []),
         agent: {
           name: p.agent_name,
           email: p.agent_email,
@@ -161,35 +161,31 @@ export const PropertyProvider = ({ children }) => {
     if (!user) return { success: false, error: 'User must be logged in to add properties' };
 
     try {
-      const imageUrls = [];
+      const formData = new FormData();
+
+      formData.append('title', propertyData.title);
+      formData.append('description', propertyData.description);
+      formData.append('property_type', propertyData.type);
+      formData.append('listing_type', propertyData.listingType || 'sale');
+      formData.append('price', parseFloat(propertyData.price));
+      formData.append('address', propertyData.location.address);
+      formData.append('city', propertyData.location.city);
+      formData.append('state', propertyData.location.state);
+      formData.append('zip_code', propertyData.location.zipCode);
+      formData.append('country', propertyData.location.country || 'USA');
+      formData.append('bedrooms', parseInt(propertyData.bedrooms) || 0);
+      formData.append('bathrooms', parseInt(propertyData.bathrooms) || 0);
+      formData.append('area_sqft', parseInt(propertyData.area));
+      formData.append('year_built', parseInt(propertyData.yearBuilt) || '');
+      formData.append('featured', propertyData.featured || false);
+
       if (Array.isArray(imageFiles) && imageFiles.length) {
         for (const file of imageFiles) {
-          const formData = new FormData();
-          formData.append('image', file);
-          imageUrls.push(`/uploads/${file.name}`);
+          formData.append('images', file);
         }
       }
 
-      const payload = {
-        title: propertyData.title,
-        description: propertyData.description,
-        property_type: propertyData.type,
-        listing_type: propertyData.listingType || 'sale',
-        price: parseFloat(propertyData.price),
-        address: propertyData.location.address,
-        city: propertyData.location.city,
-        state: propertyData.location.state,
-        zip_code: propertyData.location.zipCode,
-        country: propertyData.location.country || 'USA',
-        bedrooms: parseInt(propertyData.bedrooms) || 0,
-        bathrooms: parseInt(propertyData.bathrooms) || 0,
-        area_sqft: parseInt(propertyData.area),
-        year_built: parseInt(propertyData.yearBuilt) || null,
-        featured: propertyData.featured || false,
-        images: imageUrls,
-      };
-
-      const response = await propertyService.createProperty(payload);
+      const response = await propertyService.createProperty(formData);
       await loadProperties();
 
       return { success: true, id: response.propertyId };

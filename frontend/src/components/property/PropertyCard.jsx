@@ -36,6 +36,10 @@ const PropertyCard = ({ property, onFavorite, isFavorited = false }) => {
     }).format(new Date(date));
   };
 
+  const imageUrl = images?.[0]
+    ? (images[0].startsWith('http') ? images[0] : `http://localhost:5000${images[0]}`)
+    : 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg';
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,7 +50,7 @@ const PropertyCard = ({ property, onFavorite, isFavorited = false }) => {
       {/* Image Container */}
       <div className="relative h-64 overflow-hidden">
         <img
-          src={images?.[0] || 'https://images.pexels.com/photos/106399/pexels-photo-106399.jpeg'}
+          src={imageUrl}
           alt={title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
         />
